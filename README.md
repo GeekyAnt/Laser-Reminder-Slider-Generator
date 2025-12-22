@@ -4,7 +4,7 @@ A parametric laser-cut reminder board designer with interactive 3D preview and S
 
 ![Reminder Board HTML_Example](images/html_Screenshot_1.png)
 ![Reminder Board Cut_Exampl](images/CutDraft_V1.png)
-![XCS_Add_Text_Example](XCS_Text_Example.png)
+![XCS_Add_Text_Example](images/XCS_Text_Example.png)
 
 
 
