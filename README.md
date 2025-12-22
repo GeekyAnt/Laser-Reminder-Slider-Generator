@@ -2,6 +2,10 @@
 
 A parametric laser-cut reminder board designer with interactive 3D preview and SVG export. Create custom sliding message boards for tracking daily tasks, pet care, baby schedules, and more.
 
+![Reminder Board HTML_Example](images/html_Screenshot_1.png)
+!![Reminder Board Cut_Exampl](images/CutDraft_V1.png)
+
+
 
 ## Features
 
