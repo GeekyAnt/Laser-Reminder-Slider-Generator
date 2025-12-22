@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<!--
+    Laser Reminder Slider Generator
+    Web-based parametric designer for laser-cut reminder boards
+    
+    Copyright (c) 2025 Alex
+    
+    This project is licensed under the MIT License.
+    
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+    
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+    
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+    
+    Repository: https://github.com/GeekyAnt/laser-reminder-slider-generator
+    
+    Built with Three.js (https://threejs.org/)
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reminder Board Designer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            width: 350px;
+            background: white;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .control-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+        
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .export-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+        
+        .export-section h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .export-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        button {
+            padding: 12px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #45a049;
+        }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+        
+        .viewer {
+            flex: 1;
+            position: relative;
+            background: #e0e0e0;
+        }
+        
+        #canvas-container {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #1976d2;
+        }
+        
+        .divider {
+            height: 1px;
+            background: #eee;
+            margin: 25px 0;
+        }
+        
+        .controls-hint {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h1>🎯 Reminder Board Designer</h1>
+        
+        <div class="info">
+            Adjust the parameters below to customize your reminder board. The 3D preview updates in real-time!
+        </div>
+        
+        <div class="control-group">
+            <label for="material_thickness">Material Thickness (mm)</label>
+            <input type="range" id="material_thickness" min="1" max="10" step="0.5" value="3">
+            <input type="number" id="material_thickness_num" min="1" max="10" step="0.5" value="3">
+        </div>
+        
+        <div class="control-group">
+            <label for="board_width">Board Width (mm)</label>
+            <input type="range" id="board_width" min="80" max="200" step="1" value="127">
+            <input type="number" id="board_width_num" min="80" max="200" step="1" value="127">
+        </div>
+        
+        <div class="control-group">
+            <label for="num_slider_sections">Number of Slider Sections</label>
+            <input type="range" id="num_slider_sections" min="1" max="5" step="1" value="1">
+            <input type="number" id="num_slider_sections_num" min="1" max="5" step="1" value="1">
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="control-group">
+            <label for="header_height">Header Height (mm)</label>
+            <input type="range" id="header_height" min="20" max="50" step="1" value="30">
+            <input type="number" id="header_height_num" min="20" max="50" step="1" value="30">
+        </div>
+        
+        <div class="control-group">
+            <label for="slider_height">Slider Height (mm)</label>
+            <input type="range" id="slider_height" min="12" max="25" step="1" value="16">
+            <input type="number" id="slider_height_num" min="12" max="25" step="1" value="16">
+        </div>
+        
+        <div class="control-group">
+            <label for="footer_height">Footer Height (mm)</label>
+            <input type="range" id="footer_height" min="20" max="50" step="1" value="30">
+            <input type="number" id="footer_height_num" min="20" max="50" step="1" value="30">
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="control-group">
+            <label for="slot_margin">Slot Margin (mm)</label>
+            <input type="range" id="slot_margin" min="3" max="15" step="0.1" value="6.35">
+            <input type="number" id="slot_margin_num" min="3" max="15" step="0.1" value="6.35">
+        </div>
+        
+        <div class="control-group">
+            <label for="slot_height">Slot Height (mm)</label>
+            <input type="range" id="slot_height" min="8" max="20" step="0.1" value="12.70">
+            <input type="number" id="slot_height_num" min="8" max="20" step="0.1" value="12.70">
+        </div>
+        
+        <div class="export-section">
+            <h2>📥 Export Layers (SVG)</h2>
+            <div class="export-buttons">
+                <button onclick="exportLayer('layer1')">Layer 1</button>
+                <button onclick="exportLayer('layer2')">Layer 2</button>
+                <button onclick="exportLayer('layer3')">Layer 3</button>
+                <button onclick="exportLayer('slider')">Slider</button>
+                <button onclick="exportLayer('knob')">Knob</button>
+                <button onclick="exportAllLayers()" style="grid-column: 1 / -1; background: #2196F3;">Export All (Separate Files)</button>
+                <button onclick="exportAllLayersOneSVG()" style="grid-column: 1 / -1; background: #FF9800;">Export All (One File)</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="viewer">
+        <div id="canvas-container"></div>
+        <div class="controls-hint">🖱️ Left click + drag to rotate | Right click + drag to pan | Scroll to zoom</div>
+    </div>
+
+    <script>
+        // Parameters object
+        let params = {
+            material_thickness: 3,
+            board_width: 127,
+            num_slider_sections: 1,
+            header_height: 30,
+            slider_height: 16,
+            footer_height: 30,
+            slot_margin: 6.35,
+            slot_height: 12.70,
+            layer_gap: 0.05,
+            slider_clearance: 0.2,
+            knob_cutout_margin: 0.5,
+            knob_height_reduction: 0.5,
+            knob_clearance: 0.3
+        };
+
+        // Three.js setup
+        let scene, camera, renderer, controls;
+        let assemblyGroup;
+
+        function initThreeJS() {
+            const container = document.getElementById('canvas-container');
+            
+            // Scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xe0e0e0);
+            
+            // Camera
+            camera = new THREE.PerspectiveCamera(
+                45,
+                container.clientWidth / container.clientHeight,
+                1,
+                10000
+            );
+            camera.position.set(150, -150, 150);
+            camera.lookAt(0, 0, 0);
+            
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+            
+            // Controls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            
+            // Lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(100, 100, 100);
+            scene.add(directionalLight);
+            
+            // Grid
+            const gridHelper = new THREE.GridHelper(400, 40, 0x888888, 0xcccccc);
+            scene.add(gridHelper);
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+            
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                controls.update();
+                renderer.render(scene, camera);
+            }
+            animate();
+        }
+
+        // Helper function to create extruded shape from points
+        function createExtrudedShape(points, height, color) {
+            const shape = new THREE.Shape(points.map(p => new THREE.Vector2(p[0], p[1])));
+            const geometry = new THREE.ExtrudeGeometry(shape, {
+                depth: height,
+                bevelEnabled: false
+            });
+            const material = new THREE.MeshStandardMaterial({ 
+                color: color,
+                roughness: 0.7,
+                metalness: 0.1
+            });
+            return new THREE.Mesh(geometry, material);
+        }
+
+        // Helper to create pill shape points
+        function createPillPoints(width, height, centerX, centerY) {
+            const radius = height / 2;
+            const points = [];
+            const segments = 16;
+            
+            // Right semicircle
+            for (let i = 0; i <= segments; i++) {
+                const angle = (Math.PI / segments) * i - Math.PI / 2;
+                points.push([
+                    centerX + width - radius + Math.cos(angle) * radius,
+                    centerY + Math.sin(angle) * radius
+                ]);
+            }
+            
+            // Left semicircle
+            for (let i = 0; i <= segments; i++) {
+                const angle = (Math.PI / segments) * i + Math.PI / 2;
+                points.push([
+                    centerX + radius + Math.cos(angle) * radius,
+                    centerY + Math.sin(angle) * radius
+                ]);
+            }
+            
+            return points;
+        }
+
+        // Helper to create rectangle with hole (pill)
+        function createRectangleWithPillHole(rectWidth, rectHeight, holeWidth, holeHeight, holeX, holeY) {
+            const outerPoints = [
+                [0, 0],
+                [rectWidth, 0],
+                [rectWidth, rectHeight],
+                [0, rectHeight]
+            ].map(p => new THREE.Vector2(p[0], p[1]));
+            
+            const shape = new THREE.Shape(outerPoints);
+            
+            // Create hole
+            const holeRadius = holeHeight / 2;
+            const holePath = new THREE.Path();
+            const holePoints = createPillPoints(holeWidth, holeHeight, holeX, holeY);
+            holePath.moveTo(holePoints[0][0], holePoints[0][1]);
+            for (let i = 1; i < holePoints.length; i++) {
+                holePath.lineTo(holePoints[i][0], holePoints[i][1]);
+            }
+            holePath.closePath();
+            shape.holes.push(holePath);
+            
+            return shape;
+        }
+
+        function updateModel() {
+            // Remove old assembly
+            if (assemblyGroup) {
+                scene.remove(assemblyGroup);
+            }
+            
+            assemblyGroup = new THREE.Group();
+            
+            const totalHeight = params.header_height + (params.slider_height * params.num_slider_sections) + params.footer_height;
+            
+            // Layer 1 - Solid base
+            const layer1Points = [
+                [0, 0],
+                [params.board_width, 0],
+                [params.board_width, totalHeight],
+                [0, totalHeight]
+            ];
+            const layer1 = createExtrudedShape(layer1Points, params.material_thickness, 0xD2B48C);
+            assemblyGroup.add(layer1);
+            
+            // Layer 2 - With pill slots
+            const slot_width = params.board_width - (2 * params.slot_margin);
+            const slot_radius = params.slot_height / 2;
+            
+            const layer2Shapes = [];
+            // Header
+            layer2Shapes.push(createExtrudedShape([
+                [0, params.footer_height + (params.slider_height * params.num_slider_sections)],
+                [params.board_width, params.footer_height + (params.slider_height * params.num_slider_sections)],
+                [params.board_width, totalHeight],
+                [0, totalHeight]
+            ], params.material_thickness, 0xD2B48C));
+            
+            // Slider sections with holes
+            for (let i = 0; i < params.num_slider_sections; i++) {
+                const sectionY = params.footer_height + (i * params.slider_height);
+                const slotY = sectionY + (params.slider_height - params.slot_height) / 2 + slot_radius;
+                
+                const shape = createRectangleWithPillHole(
+                    params.board_width,
+                    params.slider_height,
+                    params.board_width,
+                    params.slot_height,
+                    0,
+                    (params.slider_height - params.slot_height) / 2 + slot_radius
+                );
+                
+                const geometry = new THREE.ExtrudeGeometry(shape, {
+                    depth: params.material_thickness,
+                    bevelEnabled: false
+                });
+                const material = new THREE.MeshStandardMaterial({ 
+                    color: 0xD2B48C,
+                    roughness: 0.7,
+                    metalness: 0.1
+                });
+                const mesh = new THREE.Mesh(geometry, material);
+                mesh.position.y = sectionY;
+                layer2Shapes.push(mesh);
+            }
+            
+            // Footer
+            layer2Shapes.push(createExtrudedShape([
+                [0, 0],
+                [params.board_width, 0],
+                [params.board_width, params.footer_height],
+                [0, params.footer_height]
+            ], params.material_thickness, 0xD2B48C));
+            
+            const layer2Group = new THREE.Group();
+            layer2Shapes.forEach(shape => layer2Group.add(shape));
+            layer2Group.position.z = params.material_thickness + params.layer_gap;
+            assemblyGroup.add(layer2Group);
+            
+            // Layer 3 - With knob cutouts
+            const slider_piece_height = params.slot_height - params.slider_clearance;
+            const knob_cutout_width = params.board_width / 3.5;
+            const knob_cutout_height = slider_piece_height - (2 * params.knob_height_reduction);
+            
+            const layer3Shapes = [];
+            // Header
+            layer3Shapes.push(createExtrudedShape([
+                [0, params.footer_height + (params.slider_height * params.num_slider_sections)],
+                [params.board_width, params.footer_height + (params.slider_height * params.num_slider_sections)],
+                [params.board_width, totalHeight],
+                [0, totalHeight]
+            ], params.material_thickness, 0xD2B48C));
+            
+            // Slider sections with knob holes
+            for (let i = 0; i < params.num_slider_sections; i++) {
+                const sectionY = params.footer_height + (i * params.slider_height);
+                const knob_x_offset = params.board_width - params.slot_margin - params.knob_cutout_margin - knob_cutout_width;
+                const knob_y_offset = (params.slider_height - knob_cutout_height) / 2 + knob_cutout_height / 2;
+                
+                const shape = createRectangleWithPillHole(
+                    params.board_width,
+                    params.slider_height,
+                    knob_cutout_width,
+                    knob_cutout_height,
+                    knob_x_offset,
+                    knob_y_offset
+                );
+                
+                const geometry = new THREE.ExtrudeGeometry(shape, {
+                    depth: params.material_thickness,
+                    bevelEnabled: false
+                });
+                const material = new THREE.MeshStandardMaterial({ 
+                    color: 0xD2B48C,
+                    roughness: 0.7,
+                    metalness: 0.1
+                });
+                const mesh = new THREE.Mesh(geometry, material);
+                mesh.position.y = sectionY;
+                layer3Shapes.push(mesh);
+            }
+            
+            // Footer
+            layer3Shapes.push(createExtrudedShape([
+                [0, 0],
+                [params.board_width, 0],
+                [params.board_width, params.footer_height],
+                [0, params.footer_height]
+            ], params.material_thickness, 0xD2B48C));
+            
+            const layer3Group = new THREE.Group();
+            layer3Shapes.forEach(shape => layer3Group.add(shape));
+            layer3Group.position.z = (2 * params.material_thickness) + (2 * params.layer_gap);
+            assemblyGroup.add(layer3Group);
+            
+            // Sliders
+            const slider_radius = slider_piece_height / 2;
+            const slider_length = slot_width - (params.board_width / 3.5);
+            
+            for (let i = 0; i < params.num_slider_sections; i++) {
+                const slider_x_offset = params.slot_margin + (slot_width - slider_length) / 2;
+                const slider_y_offset = params.footer_height + (i * params.slider_height) + (params.slider_height - slider_piece_height) / 2 + slider_radius;
+                
+                const sliderPoints = createPillPoints(slider_length, slider_piece_height, 0, 0);
+                const slider = createExtrudedShape(sliderPoints, params.material_thickness, 0xCD853F);
+                slider.position.set(slider_x_offset, slider_y_offset, params.material_thickness);
+                assemblyGroup.add(slider);
+                
+                // Knob
+                const knob_diameter = knob_cutout_height - params.knob_clearance;
+                const knob_radius = knob_diameter / 2;
+                const knob_x_offset = slider_x_offset + slider_length - slider_radius;
+                const knob_y_offset = params.footer_height + (i * params.slider_height) + (params.slider_height / 2);
+                
+                const knobGeometry = new THREE.CylinderGeometry(knob_radius, knob_radius, params.material_thickness, 32);
+                knobGeometry.rotateX(Math.PI / 2);
+                const knobMaterial = new THREE.MeshStandardMaterial({ 
+                    color: 0x8B4513,
+                    roughness: 0.6,
+                    metalness: 0.2
+                });
+                const knob = new THREE.Mesh(knobGeometry, knobMaterial);
+                knob.position.set(knob_x_offset, knob_y_offset, (2 * params.material_thickness) + (2 * params.layer_gap) + params.material_thickness / 2);
+                assemblyGroup.add(knob);
+            }
+            
+            // Center the assembly
+            assemblyGroup.position.set(-params.board_width / 2, -totalHeight / 2, 0);
+            scene.add(assemblyGroup);
+        }
+
+        // SVG Export functions
+        function createSVGPath(points, close = true) {
+            let path = `M ${points[0][0]} ${points[0][1]}`;
+            for (let i = 1; i < points.length; i++) {
+                path += ` L ${points[i][0]} ${points[i][1]}`;
+            }
+            if (close) path += ' Z';
+            return path;
+        }
+
+        function exportLayer(layerType) {
+            const totalHeight = params.header_height + (params.slider_height * params.num_slider_sections) + params.footer_height;
+            const slot_width = params.board_width - (2 * params.slot_margin);
+            const slider_piece_height = params.slot_height - params.slider_clearance;
+            const slider_radius = slider_piece_height / 2;
+            const slider_length = slot_width - (params.board_width / 3.5);
+            const knob_cutout_width = params.board_width / 3.5;
+            const knob_cutout_height = slider_piece_height - (2 * params.knob_height_reduction);
+            const knob_diameter = knob_cutout_height - params.knob_clearance;
+            
+            let svgContent = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${params.board_width}mm" height="${totalHeight}mm" viewBox="0 0 ${params.board_width} ${totalHeight}">`;
+            
+            if (layerType === 'layer1') {
+                // Simple rectangle
+                svgContent += `<rect x="0" y="0" width="${params.board_width}" height="${totalHeight}" fill="none" stroke="black" stroke-width="0.1"/>`;
+                
+            } else if (layerType === 'layer2') {
+                // Outer rectangle
+                svgContent += `<rect x="0" y="0" width="${params.board_width}" height="${totalHeight}" fill="none" stroke="black" stroke-width="0.1"/>`;
+                
+                // Pill slots
+                for (let i = 0; i < params.num_slider_sections; i++) {
+                    const slot_y_offset = params.footer_height + (i * params.slider_height) + (params.slider_height - params.slot_height) / 2;
+                    const slot_radius = params.slot_height / 2;
+                    const slotPoints = createPillPoints(slot_width, params.slot_height, params.slot_margin, slot_y_offset + slot_radius);
+                    svgContent += `<path d="${createSVGPath(slotPoints)}" fill="none" stroke="black" stroke-width="0.1"/>`;
+                }
+                
+            } else if (layerType === 'layer3') {
+                // Outer rectangle
+                svgContent += `<rect x="0" y="0" width="${params.board_width}" height="${totalHeight}" fill="none" stroke="black" stroke-width="0.1"/>`;
+                
+                // Knob cutouts
+                for (let i = 0; i < params.num_slider_sections; i++) {
+                    const knob_x_offset = params.board_width - params.slot_margin - params.knob_cutout_margin - knob_cutout_width;
+                    const knob_y_offset = params.footer_height + (i * params.slider_height) + (params.slider_height - knob_cutout_height) / 2;
+                    const knob_cutout_radius = knob_cutout_height / 2;
+                    const cutoutPoints = createPillPoints(knob_cutout_width, knob_cutout_height, knob_x_offset, knob_y_offset + knob_cutout_radius);
+                    svgContent += `<path d="${createSVGPath(cutoutPoints)}" fill="none" stroke="black" stroke-width="0.1"/>`;
+                }
+                
+            } else if (layerType === 'slider') {
+                const sliderHeight = slider_piece_height;
+                for (let i = 0; i < params.num_slider_sections; i++) {
+                    const yOffset = i * (sliderHeight + 5);
+                    const sliderPoints = createPillPoints(slider_length, sliderHeight, 0, yOffset + slider_radius);
+                    svgContent += `<path d="${createSVGPath(sliderPoints)}" fill="none" stroke="black" stroke-width="0.1"/>`;
+                }
+                
+            } else if (layerType === 'knob') {
+                const knob_radius = knob_diameter / 2;
+                for (let i = 0; i < params.num_slider_sections; i++) {
+                    const xOffset = i * (knob_diameter + 5) + knob_radius;
+                    svgContent += `<circle cx="${xOffset}" cy="${knob_radius}" r="${knob_radius}" fill="none" stroke="black" stroke-width="0.1"/>`;
+                }
+            }
+            
+            svgContent += '</svg>';
+            
+            // Download
+            const blob = new Blob([svgContent], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `reminder_board_${layerType}.svg`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function exportAllLayers() {
+            const layers = ['layer1', 'layer2', 'layer3', 'slider', 'knob'];
+            layers.forEach((layer, index) => {
+                setTimeout(() => exportLayer(layer), index * 500);
+            });
+        }
+
+        function exportAllLayersOneSVG() {
+            const totalHeight = params.header_height + (params.slider_height * params.num_slider_sections) + params.footer_height;
+            const slot_width = params.board_width - (2 * params.slot_margin);
+            const slider_piece_height = params.slot_height - params.slider_clearance;
+            const slider_radius = slider_piece_height / 2;
+            const slider_length = slot_width - (params.board_width / 3.5);
+            const knob_cutout_width = params.board_width / 3.5;
+            const knob_cutout_height = slider_piece_height - (2 * params.knob_height_reduction);
+            const knob_diameter = knob_cutout_height - params.knob_clearance;
+            const knob_radius = knob_diameter / 2;
+            
+            const spacing = 10; // mm between parts
+            
+            // Calculate layout positions
+            let currentX = 0;
+            let currentY = 0;
+            let maxHeight = 0;
+            
+            // Layout: Stack 3 main layers vertically on left, sliders and knobs on right
+            const mainLayerWidth = params.board_width;
+            const mainLayersTotalHeight = (totalHeight * 3) + (spacing * 2);
+            
+            const slidersX = mainLayerWidth + spacing;
+            const knobsX = slidersX + slider_length + spacing;
+            
+            // Calculate canvas size
+            const canvasWidth = knobsX + (knob_diameter * params.num_slider_sections) + ((params.num_slider_sections - 1) * 5) + spacing;
+            const canvasHeight = Math.max(mainLayersTotalHeight, (slider_piece_height * params.num_slider_sections) + ((params.num_slider_sections - 1) * 5));
+            
+            let svgContent = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${canvasWidth}mm" height="${canvasHeight}mm" viewBox="0 0 ${canvasWidth} ${canvasHeight}">
+<g id="all-layers">`;
+            
+            // Layer 1
+            svgContent += `\n  <!-- Layer 1 -->`;
+            svgContent += `\n  <g id="layer1" transform="translate(0, 0)">`;
+            svgContent += `\n    <rect x="0" y="0" width="${params.board_width}" height="${totalHeight}" fill="none" stroke="black" stroke-width="0.1"/>`;
+            svgContent += `\n  </g>`;
+            
+            // Layer 2
+            const layer2Y = totalHeight + spacing;
+            svgContent += `\n\n  <!-- Layer 2 -->`;
+            svgContent += `\n  <g id="layer2" transform="translate(0, ${layer2Y})">`;
+            svgContent += `\n    <rect x="0" y="0" width="${params.board_width}" height="${totalHeight}" fill="none" stroke="black" stroke-width="0.1"/>`;
+            
+            // Pill slots
+            for (let i = 0; i < params.num_slider_sections; i++) {
+                const slot_y_offset = params.footer_height + (i * params.slider_height) + (params.slider_height - params.slot_height) / 2;
+                const slot_radius = params.slot_height / 2;
+                const slotPoints = createPillPoints(slot_width, params.slot_height, params.slot_margin, slot_y_offset + slot_radius);
+                svgContent += `\n    <path d="${createSVGPath(slotPoints)}" fill="none" stroke="black" stroke-width="0.1"/>`;
+            }
+            svgContent += `\n  </g>`;
+            
+            // Layer 3
+            const layer3Y = (totalHeight * 2) + (spacing * 2);
+            svgContent += `\n\n  <!-- Layer 3 -->`;
+            svgContent += `\n  <g id="layer3" transform="translate(0, ${layer3Y})">`;
+            svgContent += `\n    <rect x="0" y="0" width="${params.board_width}" height="${totalHeight}" fill="none" stroke="black" stroke-width="0.1"/>`;
+            
+            // Knob cutouts
+            for (let i = 0; i < params.num_slider_sections; i++) {
+                const knob_x_offset = params.board_width - params.slot_margin - params.knob_cutout_margin - knob_cutout_width;
+                const knob_y_offset = params.footer_height + (i * params.slider_height) + (params.slider_height - knob_cutout_height) / 2;
+                const knob_cutout_radius = knob_cutout_height / 2;
+                const cutoutPoints = createPillPoints(knob_cutout_width, knob_cutout_height, knob_x_offset, knob_y_offset + knob_cutout_radius);
+                svgContent += `\n    <path d="${createSVGPath(cutoutPoints)}" fill="none" stroke="black" stroke-width="0.1"/>`;
+            }
+            svgContent += `\n  </g>`;
+            
+            // Sliders
+            svgContent += `\n\n  <!-- Sliders -->`;
+            svgContent += `\n  <g id="sliders" transform="translate(${slidersX}, 0)">`;
+            for (let i = 0; i < params.num_slider_sections; i++) {
+                const yOffset = i * (slider_piece_height + 5);
+                const sliderPoints = createPillPoints(slider_length, slider_piece_height, 0, yOffset + slider_radius);
+                svgContent += `\n    <path d="${createSVGPath(sliderPoints)}" fill="none" stroke="black" stroke-width="0.1"/>`;
+            }
+            svgContent += `\n  </g>`;
+            
+            // Knobs
+            svgContent += `\n\n  <!-- Knobs -->`;
+            svgContent += `\n  <g id="knobs" transform="translate(${knobsX}, 0)">`;
+            for (let i = 0; i < params.num_slider_sections; i++) {
+                const xOffset = i * (knob_diameter + 5) + knob_radius;
+                svgContent += `\n    <circle cx="${xOffset}" cy="${knob_radius}" r="${knob_radius}" fill="none" stroke="black" stroke-width="0.1"/>`;
+            }
+            svgContent += `\n  </g>`;
+            
+            svgContent += '\n</g>\n</svg>';
+            
+            // Download
+            const blob = new Blob([svgContent], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `reminder_board_all_layers.svg`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Sync range and number inputs
+        const controlNames = [
+            'material_thickness', 'board_width', 'num_slider_sections',
+            'header_height', 'slider_height', 'footer_height',
+            'slot_margin', 'slot_height'
+        ];
+
+        controlNames.forEach(name => {
+            const rangeInput = document.getElementById(name);
+            const numberInput = document.getElementById(name + '_num');
+            
+            rangeInput.addEventListener('input', (e) => {
+                numberInput.value = e.target.value;
+                params[name] = parseFloat(e.target.value);
+                updateModel();
+            });
+            
+            numberInput.addEventListener('input', (e) => {
+                rangeInput.value = e.target.value;
+                params[name] = parseFloat(e.target.value);
+                updateModel();
+            });
+        });
+
+        // Initialize
+        initThreeJS();
+        updateModel();
+    </script>
+</body>
+</html>
