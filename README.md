@@ -2,32 +2,41 @@
 
 A parametric laser-cut reminder board designer with interactive 3D preview and SVG export. Create custom sliding message boards for tracking daily tasks, pet care, baby schedules, and more.
 
-![Reminder Board HTML_Example](images/html_Screenshot_1.png)
-![Reminder Board Cut_Exampl](images/CutDraft_V1.png)
-![XCS_Add_Text_Example](images/XCS_Text_Example.png)
-
-
+![Reminder Board Example](images/example_board.png)
+*Example: AM/PM and Fed/Hungry slider board*
 
 ## Features
 
-- Interactive 3D Preview - See your design in real-time as you adjust parameters
-- Fully Parametric - Customize every dimension with easy-to-use sliders
-- Multiple Export Options - Export individual layers or all layers in one optimized SVG
-- Web-Based - No installation required, runs entirely in your browser
-- OpenSCAD Integration - Includes .scad file for advanced users
-- Python Automation - Batch export script for OpenSCAD workflow
-- Precision Design - All dimensions in millimeters with configurable tolerances
+- **Interactive 3D Preview** - See your design in real-time as you adjust parameters
+- **Layer Visibility Controls** - Toggle individual layers on/off to inspect the design
+- **Fully Parametric** - Customize every dimension with easy-to-use sliders
+- **Custom Text & Fonts** - Add text to headers, footers, sliders, and backgrounds with 27+ font choices
+- **Individual Font Control** - Select different fonts for each text element
+- **Settings Management** - Save/load configurations and set personal defaults
+- **Multiple Export Options** - Export individual layers or all layers in one optimized SVG
+- **Web-Based** - No installation required, runs entirely in your browser
+- **OpenSCAD Integration** - Includes .scad file for advanced users
+- **Python Automation** - Batch export script for OpenSCAD workflow
+- **Precision Design** - All dimensions in millimeters with configurable tolerances
 
 ## Quick Start
 
 ### Web Designer (Recommended)
 
-1. Download `reminder_board_designer.html`
+1. Download `reminder_board_designer_threejs.html`
 2. Open it in any modern web browser
-3. Adjust parameters using the sliders
-4. Click "Export All (One File)" to download your laser-ready SVG
+3. Adjust parameters using the sliders and controls
+4. Add custom text and select fonts for each element
+5. Toggle layer visibility to inspect your design
+6. Click "Export All (One File)" to download your laser-ready SVG
 
 That's it. No installation, no dependencies.
+
+**Pro Tips:**
+- Use the layer visibility checkboxes to inspect individual layers
+- Save your configurations for reuse across multiple projects
+- Set your preferred defaults to speed up future designs
+- Export individual layers if you need to modify specific parts
 
 ### OpenSCAD Workflow
 
@@ -40,13 +49,18 @@ That's it. No installation, no dependencies.
 
 The design generates 5 laser-cut pieces per slider section:
 
-1. **Layer 1** - Bottom/back panel (solid)
-2. **Layer 2** - Middle layer with full-length slider tracks
-3. **Layer 3** - Top layer with knob cutouts for slider control
-4. **Slider** - Sliding piece that moves within the tracks
+1. **Layer 1 (Base)** - Bottom/back panel with optional background text
+2. **Layer 2 (Slots)** - Middle layer with pill-shaped slider tracks
+3. **Layer 3 (Top)** - Top layer with knob cutouts, header/footer text, and slider labels
+4. **Slider** - Sliding piece with optional hidden text that reveals when moved
 5. **Knob** - Control knob (glues to slider, protrudes through Layer 3)
 
 Stack order: Layer 1 → Slider → Layer 2 → Layer 3 with Knob
+
+**Text Placement:**
+- **Layer 1**: Background text visible through the slider track
+- **Layer 3**: Header text, footer text, and slider section labels
+- **Slider**: Hidden text that appears when the slider is moved
 
 ## Use Cases
 
@@ -70,10 +84,37 @@ Perfect for creating reminder boards for:
 - **Slider Height** - Height of each slider track (default: 16mm)
 - **Footer Height** - Bottom section for labels/text (default: 30mm)
 
+### Text Customization
+- **Header Text** - Custom text for the top section with independent font selection
+- **Footer Text** - Custom text for the bottom section with independent font selection
+- **Slider Section Labels** - Label each slider track (visible on Layer 3)
+- **Slider Hidden Text** - Text on the slider that reveals when moved
+- **Slider Background Text** - Text visible in the track on Layer 1
+- **Font Families** - 27 fonts including web-safe and Google Fonts options
+- **Font Sizes** - Independent size control for header, footer, and slider text
+- **Text Positioning** - Fine-tune X and Y positions for all text elements
+
+### Slider Positioning
+- **Slider Position (%)** - Set initial position of each slider (-18% to 50%)
+- **Hidden Text Position (%)** - Control where hidden text appears on slider (10-90%)
+- **Label X Position** - Horizontal offset for slider labels (0-70mm)
+- **Background Text X Position** - Horizontal offset for background text (30-60mm)
+
+### Layer Visibility
+- **Show/Hide Layer 1** - Toggle base layer visibility in 3D preview
+- **Show/Hide Layer 2** - Toggle slot layer visibility in 3D preview
+- **Show/Hide Layer 3** - Toggle top layer visibility in 3D preview
+
 ### Advanced Settings
 - **Slot Margin** - Distance from edges to slider track (default: 6.35mm)
 - **Slot Height** - Height of the slider track (default: 12.70mm)
 - Layer gaps, clearances, and knob dimensions (in the code)
+
+### Settings Management
+- **Save Configuration** - Export all settings to a JSON file
+- **Load Configuration** - Import previously saved settings
+- **Set as Default** - Save current settings as your personal defaults
+- **Reset to Factory** - Restore original default settings
 
 ## Design Details
 
@@ -104,13 +145,13 @@ Perfect for creating reminder boards for:
 ## File Structure
 
 ```
-laser-reminder-slider-generator/
-├── reminder_board_designer.html    # Web-based designer (recommended)
-├── reminder_board.scad              # OpenSCAD parametric model
-├── export_layers.py                 # Python batch export script
-├── README.md                        # This file
-├── LICENSE                          # MIT License
-└── images/                          # Example images and screenshots
+Claude-Code-AutoSlider/
+├── reminder_board_designer_threejs.html  # Web-based designer with 3D preview (recommended)
+├── reminder_board.scad                   # OpenSCAD parametric model
+├── export_layers.py                      # Python batch export script
+├── readme.md                             # This file
+├── LICENSE                               # MIT License
+└── images/                               # Example images and screenshots
     ├── example_board.png
     ├── web_interface.png
     └── assembly_diagram.png
@@ -169,9 +210,35 @@ Contributions are welcome. Feel free to:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## Advanced Features
+
+### Font Options
+The web designer includes 27 carefully curated fonts organized into categories:
+- **Sans-Serif (Web Safe)**: Arial, Helvetica, Verdana, Tahoma, Trebuchet MS, Century Gothic, Franklin Gothic Medium
+- **Serif (Web Safe)**: Times New Roman, Georgia, Palatino Linotype, Garamond, Book Antiqua
+- **Monospace (Web Safe)**: Courier New, Lucida Console, Monaco, Consolas
+- **Display (Web Safe)**: Impact, Comic Sans MS
+- **Google Fonts**: Roboto, Open Sans, Lato, Montserrat, Oswald, Raleway, Playfair Display, Bebas Neue, Pacifico, Dancing Script
+
+Each text element can use a different font, allowing for creative typography combinations.
+
+### Configuration Management
+- **Persistent Defaults**: Your preferences are saved in the browser and automatically loaded
+- **JSON Export/Import**: Share configurations between devices or with others
+- **Version Tracking**: Configuration files include timestamps for organization
+- **Factory Reset**: Always able to return to original settings
+
+### 3D Preview Controls
+- **Orbit**: Left-click and drag to rotate the view
+- **Pan**: Right-click and drag to move the camera
+- **Zoom**: Scroll wheel to zoom in/out
+- **Layer Isolation**: Hide layers to inspect specific components
+- **Real-time Updates**: All changes reflect instantly in the 3D view
+
 ## Acknowledgments
 
-- Built with Three.js for 3D visualization
+- Built with Three.js for interactive 3D visualization
+- Font rendering powered by HTML5 Canvas API
 - Inspired by the need for simple, customizable reminder boards
 - Thanks to the laser cutting and maker communities
 

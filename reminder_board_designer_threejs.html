@@ -34,6 +34,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reminder Board Designer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&family=Lato:wght@400;700&family=Montserrat:wght@400;700&family=Oswald:wght@400;700&family=Raleway:wght@400;700&family=Playfair+Display:wght@400;700&family=Bebas+Neue&family=Pacifico&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet" onerror="this.onerror=null;">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <style>
@@ -174,59 +177,377 @@
         <div class="info">
             Adjust the parameters below to customize your reminder board. The 3D preview updates in real-time!
         </div>
-        
+
+        <div class="control-group" style="background: #f9f9f9; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
+            <label style="font-weight: 600; margin-bottom: 10px; display: block;">Layer Visibility</label>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <label style="display: flex; align-items: center; cursor: pointer; font-weight: normal;">
+                    <input type="checkbox" id="show_layer1" checked style="margin-right: 8px; width: 18px; height: 18px; cursor: pointer;">
+                    <span>Show Layer 1 (Base)</span>
+                </label>
+                <label style="display: flex; align-items: center; cursor: pointer; font-weight: normal;">
+                    <input type="checkbox" id="show_layer2" checked style="margin-right: 8px; width: 18px; height: 18px; cursor: pointer;">
+                    <span>Show Layer 2 (Slots)</span>
+                </label>
+                <label style="display: flex; align-items: center; cursor: pointer; font-weight: normal;">
+                    <input type="checkbox" id="show_layer3" checked style="margin-right: 8px; width: 18px; height: 18px; cursor: pointer;">
+                    <span>Show Layer 3 (Top)</span>
+                </label>
+            </div>
+        </div>
+
         <div class="control-group">
             <label for="material_thickness">Material Thickness (mm)</label>
             <input type="range" id="material_thickness" min="1" max="10" step="0.5" value="3">
             <input type="number" id="material_thickness_num" min="1" max="10" step="0.5" value="3">
         </div>
-        
+
         <div class="control-group">
             <label for="board_width">Board Width (mm)</label>
             <input type="range" id="board_width" min="80" max="200" step="1" value="127">
             <input type="number" id="board_width_num" min="80" max="200" step="1" value="127">
         </div>
-        
-        <div class="control-group">
-            <label for="num_slider_sections">Number of Slider Sections</label>
-            <input type="range" id="num_slider_sections" min="1" max="5" step="1" value="1">
-            <input type="number" id="num_slider_sections_num" min="1" max="5" step="1" value="1">
-        </div>
-        
+
         <div class="divider"></div>
-        
+
         <div class="control-group">
             <label for="header_height">Header Height (mm)</label>
             <input type="range" id="header_height" min="20" max="50" step="1" value="30">
             <input type="number" id="header_height_num" min="20" max="50" step="1" value="30">
         </div>
-        
+
         <div class="control-group">
-            <label for="slider_height">Slider Height (mm)</label>
-            <input type="range" id="slider_height" min="12" max="25" step="1" value="16">
-            <input type="number" id="slider_height_num" min="12" max="25" step="1" value="16">
+            <label for="header_text">Header Text</label>
+            <input type="text" id="header_text" placeholder="Enter header text" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
         </div>
-        
+
+        <div class="control-group">
+            <label for="font_family_header">Header Font</label>
+            <select id="font_family_header" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+                <optgroup label="Sans-Serif (Web Safe)">
+                    <option value="Arial">Arial</option>
+                    <option value="Helvetica">Helvetica</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Tahoma">Tahoma</option>
+                    <option value="Trebuchet MS">Trebuchet MS</option>
+                    <option value="Century Gothic">Century Gothic</option>
+                    <option value="Franklin Gothic Medium">Franklin Gothic Medium</option>
+                </optgroup>
+                <optgroup label="Serif (Web Safe)">
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Palatino Linotype">Palatino Linotype</option>
+                    <option value="Garamond">Garamond</option>
+                    <option value="Book Antiqua">Book Antiqua</option>
+                </optgroup>
+                <optgroup label="Monospace (Web Safe)">
+                    <option value="Courier New">Courier New</option>
+                    <option value="Lucida Console">Lucida Console</option>
+                    <option value="Monaco">Monaco</option>
+                    <option value="Consolas">Consolas</option>
+                </optgroup>
+                <optgroup label="Display (Web Safe)">
+                    <option value="Impact">Impact</option>
+                    <option value="Comic Sans MS">Comic Sans MS</option>
+                </optgroup>
+                <optgroup label="Google Fonts">
+                    <option value="Roboto">Roboto</option>
+                    <option value="Open Sans">Open Sans</option>
+                    <option value="Lato">Lato</option>
+                    <option value="Montserrat">Montserrat</option>
+                    <option value="Oswald">Oswald</option>
+                    <option value="Raleway">Raleway</option>
+                    <option value="Playfair Display">Playfair Display</option>
+                    <option value="Bebas Neue">Bebas Neue</option>
+                    <option value="Pacifico">Pacifico</option>
+                    <option value="Dancing Script">Dancing Script</option>
+                </optgroup>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label for="header_footer_font_size">Header Font Size (mm)</label>
+            <input type="range" id="header_footer_font_size" min="3" max="20" step="0.5" value="8">
+            <input type="number" id="header_footer_font_size_num" min="3" max="20" step="0.5" value="8">
+        </div>
+
+        <div class="divider"></div>
+
         <div class="control-group">
             <label for="footer_height">Footer Height (mm)</label>
             <input type="range" id="footer_height" min="20" max="50" step="1" value="30">
             <input type="number" id="footer_height_num" min="20" max="50" step="1" value="30">
         </div>
-        
+
+        <div class="control-group">
+            <label for="footer_text">Footer Text</label>
+            <input type="text" id="footer_text" placeholder="Enter footer text" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+        </div>
+
+        <div class="control-group">
+            <label for="font_family_footer">Footer Font</label>
+            <select id="font_family_footer" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+                <optgroup label="Sans-Serif (Web Safe)">
+                    <option value="Arial">Arial</option>
+                    <option value="Helvetica">Helvetica</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Tahoma">Tahoma</option>
+                    <option value="Trebuchet MS">Trebuchet MS</option>
+                    <option value="Century Gothic">Century Gothic</option>
+                    <option value="Franklin Gothic Medium">Franklin Gothic Medium</option>
+                </optgroup>
+                <optgroup label="Serif (Web Safe)">
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Palatino Linotype">Palatino Linotype</option>
+                    <option value="Garamond">Garamond</option>
+                    <option value="Book Antiqua">Book Antiqua</option>
+                </optgroup>
+                <optgroup label="Monospace (Web Safe)">
+                    <option value="Courier New">Courier New</option>
+                    <option value="Lucida Console">Lucida Console</option>
+                    <option value="Monaco">Monaco</option>
+                    <option value="Consolas">Consolas</option>
+                </optgroup>
+                <optgroup label="Display (Web Safe)">
+                    <option value="Impact">Impact</option>
+                    <option value="Comic Sans MS">Comic Sans MS</option>
+                </optgroup>
+                <optgroup label="Google Fonts">
+                    <option value="Roboto">Roboto</option>
+                    <option value="Open Sans">Open Sans</option>
+                    <option value="Lato">Lato</option>
+                    <option value="Montserrat">Montserrat</option>
+                    <option value="Oswald">Oswald</option>
+                    <option value="Raleway">Raleway</option>
+                    <option value="Playfair Display">Playfair Display</option>
+                    <option value="Bebas Neue">Bebas Neue</option>
+                    <option value="Pacifico">Pacifico</option>
+                    <option value="Dancing Script">Dancing Script</option>
+                </optgroup>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label for="footer_font_size">Footer Font Size (mm)</label>
+            <input type="range" id="footer_font_size" min="3" max="20" step="0.5" value="8">
+            <input type="number" id="footer_font_size_num" min="3" max="20" step="0.5" value="8">
+        </div>
+
         <div class="divider"></div>
-        
+
+        <div class="control-group">
+            <label for="num_slider_sections">Number of Slider Sections</label>
+            <input type="range" id="num_slider_sections" min="1" max="5" step="1" value="1">
+            <input type="number" id="num_slider_sections_num" min="1" max="5" step="1" value="1">
+        </div>
+
+        <div class="control-group">
+            <label for="slider_height">Slider Height (mm)</label>
+            <input type="range" id="slider_height" min="12" max="25" step="1" value="16">
+            <input type="number" id="slider_height_num" min="12" max="25" step="1" value="16">
+        </div>
+
         <div class="control-group">
             <label for="slot_margin">Slot Margin (mm)</label>
             <input type="range" id="slot_margin" min="3" max="15" step="0.1" value="6.35">
             <input type="number" id="slot_margin_num" min="3" max="15" step="0.1" value="6.35">
         </div>
-        
+
         <div class="control-group">
             <label for="slot_height">Slot Height (mm)</label>
             <input type="range" id="slot_height" min="8" max="20" step="0.1" value="12.70">
             <input type="number" id="slot_height_num" min="8" max="20" step="0.1" value="12.70">
         </div>
-        
+
+        <div class="control-group">
+            <label for="slider_font_size">Slider Text Font Size (mm)</label>
+            <input type="range" id="slider_font_size" min="2" max="15" step="0.5" value="6">
+            <input type="number" id="slider_font_size_num" min="2" max="15" step="0.5" value="6">
+        </div>
+
+        <div class="control-group">
+            <label>Slider Section Labels (one per line)</label>
+            <textarea id="slider_labels" rows="3" placeholder="Label 1&#10;Label 2&#10;Label 3" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-family: inherit; resize: vertical;"></textarea>
+        </div>
+
+        <div class="control-group">
+            <label for="font_family_slider_labels">Slider Labels Font</label>
+            <select id="font_family_slider_labels" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+                <optgroup label="Sans-Serif (Web Safe)">
+                    <option value="Arial">Arial</option>
+                    <option value="Helvetica">Helvetica</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Tahoma">Tahoma</option>
+                    <option value="Trebuchet MS">Trebuchet MS</option>
+                    <option value="Century Gothic">Century Gothic</option>
+                    <option value="Franklin Gothic Medium">Franklin Gothic Medium</option>
+                </optgroup>
+                <optgroup label="Serif (Web Safe)">
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Palatino Linotype">Palatino Linotype</option>
+                    <option value="Garamond">Garamond</option>
+                    <option value="Book Antiqua">Book Antiqua</option>
+                </optgroup>
+                <optgroup label="Monospace (Web Safe)">
+                    <option value="Courier New">Courier New</option>
+                    <option value="Lucida Console">Lucida Console</option>
+                    <option value="Monaco">Monaco</option>
+                    <option value="Consolas">Consolas</option>
+                </optgroup>
+                <optgroup label="Display (Web Safe)">
+                    <option value="Impact">Impact</option>
+                    <option value="Comic Sans MS">Comic Sans MS</option>
+                </optgroup>
+                <optgroup label="Google Fonts">
+                    <option value="Roboto">Roboto</option>
+                    <option value="Open Sans">Open Sans</option>
+                    <option value="Lato">Lato</option>
+                    <option value="Montserrat">Montserrat</option>
+                    <option value="Oswald">Oswald</option>
+                    <option value="Raleway">Raleway</option>
+                    <option value="Playfair Display">Playfair Display</option>
+                    <option value="Bebas Neue">Bebas Neue</option>
+                    <option value="Pacifico">Pacifico</option>
+                    <option value="Dancing Script">Dancing Script</option>
+                </optgroup>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label for="label_text_x_offset">Section Label X Position (mm)</label>
+            <input type="range" id="label_text_x_offset" min="0" max="70" step="0.5" value="0">
+            <input type="number" id="label_text_x_offset_num" min="0" max="70" step="0.5" value="0">
+        </div>
+
+        <div class="control-group">
+            <label>Slider Hidden Text (one per line)</label>
+            <textarea id="slider_hidden_text" rows="3" placeholder="Hidden text 1&#10;Hidden text 2&#10;Hidden text 3" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-family: inherit; resize: vertical;"></textarea>
+        </div>
+
+        <div class="control-group">
+            <label for="font_family_slider_hidden">Hidden Text Font</label>
+            <select id="font_family_slider_hidden" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+                <optgroup label="Sans-Serif (Web Safe)">
+                    <option value="Arial">Arial</option>
+                    <option value="Helvetica">Helvetica</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Tahoma">Tahoma</option>
+                    <option value="Trebuchet MS">Trebuchet MS</option>
+                    <option value="Century Gothic">Century Gothic</option>
+                    <option value="Franklin Gothic Medium">Franklin Gothic Medium</option>
+                </optgroup>
+                <optgroup label="Serif (Web Safe)">
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Palatino Linotype">Palatino Linotype</option>
+                    <option value="Garamond">Garamond</option>
+                    <option value="Book Antiqua">Book Antiqua</option>
+                </optgroup>
+                <optgroup label="Monospace (Web Safe)">
+                    <option value="Courier New">Courier New</option>
+                    <option value="Lucida Console">Lucida Console</option>
+                    <option value="Monaco">Monaco</option>
+                    <option value="Consolas">Consolas</option>
+                </optgroup>
+                <optgroup label="Display (Web Safe)">
+                    <option value="Impact">Impact</option>
+                    <option value="Comic Sans MS">Comic Sans MS</option>
+                </optgroup>
+                <optgroup label="Google Fonts">
+                    <option value="Roboto">Roboto</option>
+                    <option value="Open Sans">Open Sans</option>
+                    <option value="Lato">Lato</option>
+                    <option value="Montserrat">Montserrat</option>
+                    <option value="Oswald">Oswald</option>
+                    <option value="Raleway">Raleway</option>
+                    <option value="Playfair Display">Playfair Display</option>
+                    <option value="Bebas Neue">Bebas Neue</option>
+                    <option value="Pacifico">Pacifico</option>
+                    <option value="Dancing Script">Dancing Script</option>
+                </optgroup>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label for="hidden_text_offset">Hidden Text Position (%)</label>
+            <input type="range" id="hidden_text_offset" min="10" max="90" step="1" value="25">
+            <input type="number" id="hidden_text_offset_num" min="10" max="90" step="1" value="25">
+        </div>
+
+        <div class="control-group">
+            <label>Slider Track Background Text (one per line)</label>
+            <textarea id="slider_background_text" rows="3" placeholder="Background text 1&#10;Background text 2&#10;Background text 3" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-family: inherit; resize: vertical;"></textarea>
+        </div>
+
+        <div class="control-group">
+            <label for="font_family_background">Background Text Font</label>
+            <select id="font_family_background" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+                <optgroup label="Sans-Serif (Web Safe)">
+                    <option value="Arial">Arial</option>
+                    <option value="Helvetica">Helvetica</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Tahoma">Tahoma</option>
+                    <option value="Trebuchet MS">Trebuchet MS</option>
+                    <option value="Century Gothic">Century Gothic</option>
+                    <option value="Franklin Gothic Medium">Franklin Gothic Medium</option>
+                </optgroup>
+                <optgroup label="Serif (Web Safe)">
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Palatino Linotype">Palatino Linotype</option>
+                    <option value="Garamond">Garamond</option>
+                    <option value="Book Antiqua">Book Antiqua</option>
+                </optgroup>
+                <optgroup label="Monospace (Web Safe)">
+                    <option value="Courier New">Courier New</option>
+                    <option value="Lucida Console">Lucida Console</option>
+                    <option value="Monaco">Monaco</option>
+                    <option value="Consolas">Consolas</option>
+                </optgroup>
+                <optgroup label="Display (Web Safe)">
+                    <option value="Impact">Impact</option>
+                    <option value="Comic Sans MS">Comic Sans MS</option>
+                </optgroup>
+                <optgroup label="Google Fonts">
+                    <option value="Roboto">Roboto</option>
+                    <option value="Open Sans">Open Sans</option>
+                    <option value="Lato">Lato</option>
+                    <option value="Montserrat">Montserrat</option>
+                    <option value="Oswald">Oswald</option>
+                    <option value="Raleway">Raleway</option>
+                    <option value="Playfair Display">Playfair Display</option>
+                    <option value="Bebas Neue">Bebas Neue</option>
+                    <option value="Pacifico">Pacifico</option>
+                    <option value="Dancing Script">Dancing Script</option>
+                </optgroup>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label for="background_text_x_offset">Background Text X Position (mm)</label>
+            <input type="range" id="background_text_x_offset" min="30" max="60" step="0.5" value="45">
+            <input type="number" id="background_text_x_offset_num" min="30" max="60" step="0.5" value="45">
+        </div>
+
+        <div id="slider_position_controls">
+            <!-- Slider position controls will be dynamically added here -->
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="export-section">
+            <h2>⚙️ Settings Management</h2>
+            <div class="export-buttons">
+                <button onclick="saveConfiguration()" style="grid-column: 1 / -1; background: #9C27B0;">💾 Save Configuration</button>
+                <button onclick="loadConfiguration()" style="grid-column: 1 / -1; background: #9C27B0;">📂 Load Configuration</button>
+                <button onclick="setAsDefault()" style="grid-column: 1 / -1; background: #607D8B;">⭐ Set as My Default</button>
+                <button onclick="resetToDefaults()" style="grid-column: 1 / -1; background: #795548;">🔄 Reset to Factory Defaults</button>
+            </div>
+            <input type="file" id="configFileInput" accept=".json" style="display: none;" onchange="handleConfigFileLoad(event)">
+        </div>
+
         <div class="export-section">
             <h2>📥 Export Layers (SVG)</h2>
             <div class="export-buttons">
@@ -247,8 +568,8 @@
     </div>
 
     <script>
-        // Parameters object
-        let params = {
+        // Factory default parameters
+        const FACTORY_DEFAULTS = {
             material_thickness: 3,
             board_width: 127,
             num_slider_sections: 1,
@@ -261,12 +582,47 @@
             slider_clearance: 0.2,
             knob_cutout_margin: 0.5,
             knob_height_reduction: 0.5,
-            knob_clearance: 0.3
+            knob_clearance: 0.3,
+            header_text: '',
+            footer_text: '',
+            slider_labels: [],
+            slider_hidden_text: [],
+            slider_background_text: [],
+            font_family_header: 'Arial',
+            font_family_footer: 'Arial',
+            font_family_slider_labels: 'Arial',
+            font_family_slider_hidden: 'Arial',
+            font_family_background: 'Arial',
+            header_footer_font_size: 8,
+            footer_font_size: 8,
+            slider_font_size: 6,
+            hidden_text_offset: 25,
+            label_text_x_offset: 0,
+            background_text_x_offset: 45,
+            slider_positions: []  // Percentage of slider movement (-18 to 50)
         };
+
+        // Load user defaults from localStorage or use factory defaults
+        function loadUserDefaults() {
+            const savedDefaults = localStorage.getItem('reminderBoardDefaults');
+            if (savedDefaults) {
+                try {
+                    return JSON.parse(savedDefaults);
+                } catch (e) {
+                    console.error('Error loading user defaults:', e);
+                    return { ...FACTORY_DEFAULTS };
+                }
+            }
+            return { ...FACTORY_DEFAULTS };
+        }
+
+        // Parameters object - initialized with user defaults or factory defaults
+        let params = loadUserDefaults();
 
         // Three.js setup
         let scene, camera, renderer, controls;
         let assemblyGroup;
+        let layer1Group, layer2Group, layer3Group;
 
         function initThreeJS() {
             const container = document.getElementById('canvas-container');
@@ -302,11 +658,7 @@
             const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
             directionalLight.position.set(100, 100, 100);
             scene.add(directionalLight);
-            
-            // Grid
-            const gridHelper = new THREE.GridHelper(400, 40, 0x888888, 0xcccccc);
-            scene.add(gridHelper);
-            
+
             // Handle window resize
             window.addEventListener('resize', () => {
                 camera.aspect = container.clientWidth / container.clientHeight;
@@ -343,7 +695,7 @@
             const radius = height / 2;
             const points = [];
             const segments = 16;
-            
+
             // Right semicircle
             for (let i = 0; i <= segments; i++) {
                 const angle = (Math.PI / segments) * i - Math.PI / 2;
@@ -352,7 +704,7 @@
                     centerY + Math.sin(angle) * radius
                 ]);
             }
-            
+
             // Left semicircle
             for (let i = 0; i <= segments; i++) {
                 const angle = (Math.PI / segments) * i + Math.PI / 2;
@@ -361,8 +713,55 @@
                     centerY + Math.sin(angle) * radius
                 ]);
             }
-            
+
             return points;
+        }
+
+        // Helper to create 3D text using canvas texture on a plane
+        function create3DText(text, fontSize, fontFamily, color) {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+
+            // Set font and measure text
+            context.font = `bold ${fontSize * 10}px ${fontFamily}`;
+            const metrics = context.measureText(text);
+            const textWidth = metrics.width;
+            const textHeight = fontSize * 10;
+
+            // Set canvas size
+            canvas.width = textWidth + 20;
+            canvas.height = textHeight + 20;
+
+            // Clear canvas
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw text outline
+            context.font = `bold ${fontSize * 10}px ${fontFamily}`;
+            context.strokeStyle = color;
+            context.lineWidth = 3;
+            context.textBaseline = 'middle';
+            context.textAlign = 'center';
+            context.strokeText(text, canvas.width / 2, canvas.height / 2);
+
+            // Create texture from canvas
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.needsUpdate = true;
+
+            // Create plane geometry
+            const geometry = new THREE.PlaneGeometry(textWidth / 10, textHeight / 10);
+
+            // Create material with texture
+            const material = new THREE.MeshBasicMaterial({
+                map: texture,
+                transparent: true,
+                side: THREE.DoubleSide,
+                depthWrite: false
+            });
+
+            // Create mesh
+            const mesh = new THREE.Mesh(geometry, material);
+
+            return mesh;
         }
 
         // Helper to create rectangle with hole (pill)
@@ -390,17 +789,83 @@
             return shape;
         }
 
+        // Function to update slider position controls based on num_slider_sections
+        function updateSliderPositionControls() {
+            const container = document.getElementById('slider_position_controls');
+            container.innerHTML = '';
+
+            // Ensure slider_positions array has correct length
+            while (params.slider_positions.length < params.num_slider_sections) {
+                params.slider_positions.push(0);
+            }
+            params.slider_positions = params.slider_positions.slice(0, params.num_slider_sections);
+
+            // Create controls for each slider
+            for (let i = 0; i < params.num_slider_sections; i++) {
+                const controlGroup = document.createElement('div');
+                controlGroup.className = 'control-group';
+
+                const label = document.createElement('label');
+                label.textContent = `Slider ${i + 1} Position (%)`;
+                label.setAttribute('for', `slider_position_${i}`);
+
+                const rangeInput = document.createElement('input');
+                rangeInput.type = 'range';
+                rangeInput.id = `slider_position_${i}`;
+                rangeInput.min = '-18';
+                rangeInput.max = '50';
+                rangeInput.step = '1';
+                rangeInput.value = params.slider_positions[i] || 0;
+                rangeInput.style.width = '100%';
+                rangeInput.style.marginBottom = '5px';
+
+                const numberInput = document.createElement('input');
+                numberInput.type = 'number';
+                numberInput.id = `slider_position_${i}_num`;
+                numberInput.min = '-18';
+                numberInput.max = '50';
+                numberInput.step = '1';
+                numberInput.value = params.slider_positions[i] || 0;
+                numberInput.style.width = '100%';
+                numberInput.style.padding = '8px';
+                numberInput.style.border = '1px solid #ddd';
+                numberInput.style.borderRadius = '4px';
+                numberInput.style.fontSize = '14px';
+
+                // Add event listeners
+                rangeInput.addEventListener('input', (e) => {
+                    const value = parseFloat(e.target.value);
+                    numberInput.value = value;
+                    params.slider_positions[i] = value;
+                    updateModel();
+                });
+
+                numberInput.addEventListener('input', (e) => {
+                    const value = parseFloat(e.target.value);
+                    rangeInput.value = value;
+                    params.slider_positions[i] = value;
+                    updateModel();
+                });
+
+                controlGroup.appendChild(label);
+                controlGroup.appendChild(rangeInput);
+                controlGroup.appendChild(numberInput);
+                container.appendChild(controlGroup);
+            }
+        }
+
         function updateModel() {
             // Remove old assembly
             if (assemblyGroup) {
                 scene.remove(assemblyGroup);
             }
-            
+
             assemblyGroup = new THREE.Group();
-            
+
             const totalHeight = params.header_height + (params.slider_height * params.num_slider_sections) + params.footer_height;
-            
+
             // Layer 1 - Solid base
+            layer1Group = new THREE.Group();
             const layer1Points = [
                 [0, 0],
                 [params.board_width, 0],
@@ -408,12 +873,27 @@
                 [0, totalHeight]
             ];
             const layer1 = createExtrudedShape(layer1Points, params.material_thickness, 0xD2B48C);
-            assemblyGroup.add(layer1);
+            layer1Group.add(layer1);
+
+            // Add background text on Layer 1 in slider track areas
+            for (let i = 0; i < params.num_slider_sections; i++) {
+                if (params.slider_background_text[i]) {
+                    const backgroundTextMesh = create3DText(params.slider_background_text[i], params.slider_font_size, params.font_family_background, '#000000');
+                    backgroundTextMesh.position.set(
+                        params.board_width / 2 + params.background_text_x_offset,
+                        params.footer_height + (i * params.slider_height) + (params.slider_height / 2),
+                        params.material_thickness + 0.1
+                    );
+                    layer1Group.add(backgroundTextMesh);
+                }
+            }
+            assemblyGroup.add(layer1Group);
             
             // Layer 2 - With pill slots
             const slot_width = params.board_width - (2 * params.slot_margin);
             const slot_radius = params.slot_height / 2;
-            
+
+            layer2Group = new THREE.Group();
             const layer2Shapes = [];
             // Header
             layer2Shapes.push(createExtrudedShape([
@@ -422,26 +902,26 @@
                 [params.board_width, totalHeight],
                 [0, totalHeight]
             ], params.material_thickness, 0xD2B48C));
-            
+
             // Slider sections with holes
             for (let i = 0; i < params.num_slider_sections; i++) {
                 const sectionY = params.footer_height + (i * params.slider_height);
                 const slotY = sectionY + (params.slider_height - params.slot_height) / 2 + slot_radius;
-                
+
                 const shape = createRectangleWithPillHole(
                     params.board_width,
                     params.slider_height,
-                    params.board_width,
+                    slot_width,
                     params.slot_height,
-                    0,
+                    params.slot_margin,
                     (params.slider_height - params.slot_height) / 2 + slot_radius
                 );
-                
+
                 const geometry = new THREE.ExtrudeGeometry(shape, {
                     depth: params.material_thickness,
                     bevelEnabled: false
                 });
-                const material = new THREE.MeshStandardMaterial({ 
+                const material = new THREE.MeshStandardMaterial({
                     color: 0xD2B48C,
                     roughness: 0.7,
                     metalness: 0.1
@@ -450,7 +930,7 @@
                 mesh.position.y = sectionY;
                 layer2Shapes.push(mesh);
             }
-            
+
             // Footer
             layer2Shapes.push(createExtrudedShape([
                 [0, 0],
@@ -458,8 +938,7 @@
                 [params.board_width, params.footer_height],
                 [0, params.footer_height]
             ], params.material_thickness, 0xD2B48C));
-            
-            const layer2Group = new THREE.Group();
+
             layer2Shapes.forEach(shape => layer2Group.add(shape));
             layer2Group.position.z = params.material_thickness + params.layer_gap;
             assemblyGroup.add(layer2Group);
@@ -468,7 +947,8 @@
             const slider_piece_height = params.slot_height - params.slider_clearance;
             const knob_cutout_width = params.board_width / 3.5;
             const knob_cutout_height = slider_piece_height - (2 * params.knob_height_reduction);
-            
+
+            layer3Group = new THREE.Group();
             const layer3Shapes = [];
             // Header
             layer3Shapes.push(createExtrudedShape([
@@ -477,13 +957,13 @@
                 [params.board_width, totalHeight],
                 [0, totalHeight]
             ], params.material_thickness, 0xD2B48C));
-            
+
             // Slider sections with knob holes
             for (let i = 0; i < params.num_slider_sections; i++) {
                 const sectionY = params.footer_height + (i * params.slider_height);
                 const knob_x_offset = params.board_width - params.slot_margin - params.knob_cutout_margin - knob_cutout_width;
                 const knob_y_offset = (params.slider_height - knob_cutout_height) / 2 + knob_cutout_height / 2;
-                
+
                 const shape = createRectangleWithPillHole(
                     params.board_width,
                     params.slider_height,
@@ -492,12 +972,12 @@
                     knob_x_offset,
                     knob_y_offset
                 );
-                
+
                 const geometry = new THREE.ExtrudeGeometry(shape, {
                     depth: params.material_thickness,
                     bevelEnabled: false
                 });
-                const material = new THREE.MeshStandardMaterial({ 
+                const material = new THREE.MeshStandardMaterial({
                     color: 0xD2B48C,
                     roughness: 0.7,
                     metalness: 0.1
@@ -506,7 +986,7 @@
                 mesh.position.y = sectionY;
                 layer3Shapes.push(mesh);
             }
-            
+
             // Footer
             layer3Shapes.push(createExtrudedShape([
                 [0, 0],
@@ -514,34 +994,91 @@
                 [params.board_width, params.footer_height],
                 [0, params.footer_height]
             ], params.material_thickness, 0xD2B48C));
-            
-            const layer3Group = new THREE.Group();
+
             layer3Shapes.forEach(shape => layer3Group.add(shape));
             layer3Group.position.z = (2 * params.material_thickness) + (2 * params.layer_gap);
+
+            // Add footer text to Layer 3 (at bottom)
+            if (params.footer_text) {
+                const footerTextMesh = create3DText(params.footer_text, params.footer_font_size, params.font_family_footer, '#000000');
+                // No rotation needed - plane is already flat in XY
+                footerTextMesh.position.set(
+                    params.board_width / 2,
+                    params.footer_height / 2,
+                    params.material_thickness + 0.1
+                );
+                layer3Group.add(footerTextMesh);
+            }
+
+            // Add header text to Layer 3 (at top)
+            if (params.header_text) {
+                const headerTextMesh = create3DText(params.header_text, params.header_footer_font_size, params.font_family_header, '#000000');
+                // No rotation needed - plane is already flat in XY
+                headerTextMesh.position.set(
+                    params.board_width / 2,
+                    totalHeight - params.header_height / 2,
+                    params.material_thickness + 0.1
+                );
+                layer3Group.add(headerTextMesh);
+            }
+
+            // Add slider section labels to Layer 3
+            for (let i = 0; i < params.num_slider_sections; i++) {
+                if (params.slider_labels[i]) {
+                    const labelMesh = create3DText(params.slider_labels[i], params.slider_font_size, params.font_family_slider_labels, '#000000');
+                    // No rotation needed - plane is already flat in XY
+                    labelMesh.position.set(
+                        params.slot_margin / 2 + params.label_text_x_offset,
+                        params.footer_height + (i * params.slider_height) + (params.slider_height / 2),
+                        params.material_thickness + 0.1
+                    );
+                    layer3Group.add(labelMesh);
+                }
+            }
+
             assemblyGroup.add(layer3Group);
             
             // Sliders
             const slider_radius = slider_piece_height / 2;
             const slider_length = slot_width - (params.board_width / 3.5);
-            
+
             for (let i = 0; i < params.num_slider_sections; i++) {
-                const slider_x_offset = params.slot_margin + (slot_width - slider_length) / 2;
+                // Calculate max travel distance for slider
+                const max_travel = slot_width - slider_length;
+
+                // Get slider position (0-100%) and convert to actual X offset
+                const slider_position_percent = params.slider_positions[i] || 0;
+                const slider_travel = max_travel * (slider_position_percent / 100);
+
+                const slider_x_offset = params.slot_margin + (slot_width - slider_length) / 2 + slider_travel;
                 const slider_y_offset = params.footer_height + (i * params.slider_height) + (params.slider_height - slider_piece_height) / 2 + slider_radius;
-                
+
                 const sliderPoints = createPillPoints(slider_length, slider_piece_height, 0, 0);
                 const slider = createExtrudedShape(sliderPoints, params.material_thickness, 0xCD853F);
                 slider.position.set(slider_x_offset, slider_y_offset, params.material_thickness);
                 assemblyGroup.add(slider);
-                
+
+                // Add hidden text to slider
+                if (params.slider_hidden_text[i]) {
+                    const hiddenTextMesh = create3DText(params.slider_hidden_text[i], params.slider_font_size, params.font_family_slider_hidden, '#000000');
+                    // No rotation needed - plane is already flat in XY
+                    hiddenTextMesh.position.set(
+                        slider_x_offset + slider_length * (params.hidden_text_offset / 100),
+                        slider_y_offset,
+                        params.material_thickness + params.material_thickness + 0.1
+                    );
+                    assemblyGroup.add(hiddenTextMesh);
+                }
+
                 // Knob
                 const knob_diameter = knob_cutout_height - params.knob_clearance;
                 const knob_radius = knob_diameter / 2;
                 const knob_x_offset = slider_x_offset + slider_length - slider_radius;
                 const knob_y_offset = params.footer_height + (i * params.slider_height) + (params.slider_height / 2);
-                
+
                 const knobGeometry = new THREE.CylinderGeometry(knob_radius, knob_radius, params.material_thickness, 32);
                 knobGeometry.rotateX(Math.PI / 2);
-                const knobMaterial = new THREE.MeshStandardMaterial({ 
+                const knobMaterial = new THREE.MeshStandardMaterial({
                     color: 0x8B4513,
                     roughness: 0.6,
                     metalness: 0.2
@@ -554,6 +1091,21 @@
             // Center the assembly
             assemblyGroup.position.set(-params.board_width / 2, -totalHeight / 2, 0);
             scene.add(assemblyGroup);
+
+            // Apply layer visibility settings
+            updateLayerVisibility();
+        }
+
+        function updateLayerVisibility() {
+            if (layer1Group) {
+                layer1Group.visible = document.getElementById('show_layer1').checked;
+            }
+            if (layer2Group) {
+                layer2Group.visible = document.getElementById('show_layer2').checked;
+            }
+            if (layer3Group) {
+                layer3Group.visible = document.getElementById('show_layer3').checked;
+            }
         }
 
         // SVG Export functions
@@ -564,6 +1116,12 @@
             }
             if (close) path += ' Z';
             return path;
+        }
+
+        function createSVGText(text, x, y, fontSize, fontFamily, anchor = 'middle') {
+            if (!text) return '';
+            const escapedText = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return `<text x="${x}" y="${y}" font-family="${fontFamily}" font-size="${fontSize}" text-anchor="${anchor}" fill="none" stroke="black" stroke-width="0.1">${escapedText}</text>`;
         }
 
         function exportLayer(layerType) {
@@ -582,11 +1140,20 @@
             if (layerType === 'layer1') {
                 // Simple rectangle
                 svgContent += `<rect x="0" y="0" width="${params.board_width}" height="${totalHeight}" fill="none" stroke="black" stroke-width="0.1"/>`;
-                
+
+                // Add background text in slider track areas
+                for (let i = 0; i < params.num_slider_sections; i++) {
+                    if (params.slider_background_text[i]) {
+                        const textX = params.board_width / 2 + params.background_text_x_offset;
+                        const textY = params.footer_height + (i * params.slider_height) + (params.slider_height / 2) + params.slider_font_size / 3;
+                        svgContent += createSVGText(params.slider_background_text[i], textX, textY, params.slider_font_size, params.font_family_background, 'middle');
+                    }
+                }
+
             } else if (layerType === 'layer2') {
                 // Outer rectangle
                 svgContent += `<rect x="0" y="0" width="${params.board_width}" height="${totalHeight}" fill="none" stroke="black" stroke-width="0.1"/>`;
-                
+
                 // Pill slots
                 for (let i = 0; i < params.num_slider_sections; i++) {
                     const slot_y_offset = params.footer_height + (i * params.slider_height) + (params.slider_height - params.slot_height) / 2;
@@ -594,11 +1161,11 @@
                     const slotPoints = createPillPoints(slot_width, params.slot_height, params.slot_margin, slot_y_offset + slot_radius);
                     svgContent += `<path d="${createSVGPath(slotPoints)}" fill="none" stroke="black" stroke-width="0.1"/>`;
                 }
-                
+
             } else if (layerType === 'layer3') {
                 // Outer rectangle
                 svgContent += `<rect x="0" y="0" width="${params.board_width}" height="${totalHeight}" fill="none" stroke="black" stroke-width="0.1"/>`;
-                
+
                 // Knob cutouts
                 for (let i = 0; i < params.num_slider_sections; i++) {
                     const knob_x_offset = params.board_width - params.slot_margin - params.knob_cutout_margin - knob_cutout_width;
@@ -607,15 +1174,43 @@
                     const cutoutPoints = createPillPoints(knob_cutout_width, knob_cutout_height, knob_x_offset, knob_y_offset + knob_cutout_radius);
                     svgContent += `<path d="${createSVGPath(cutoutPoints)}" fill="none" stroke="black" stroke-width="0.1"/>`;
                 }
-                
+
+                // Add slider section labels (to the left of the opening)
+                for (let i = 0; i < params.num_slider_sections; i++) {
+                    if (params.slider_labels[i]) {
+                        const labelX = params.slot_margin / 2 + params.label_text_x_offset;
+                        const labelY = params.footer_height + (i * params.slider_height) + (params.slider_height / 2) + params.slider_font_size / 3;
+                        svgContent += createSVGText(params.slider_labels[i], labelX, labelY, params.slider_font_size, params.font_family_slider_labels, 'start');
+                    }
+                }
+
+                // Add footer text (at bottom)
+                if (params.footer_text) {
+                    const footerY = params.footer_height / 2 + params.footer_font_size / 3;
+                    svgContent += createSVGText(params.footer_text, params.board_width / 2, footerY, params.footer_font_size, params.font_family_footer);
+                }
+
+                // Add header text (at top)
+                if (params.header_text) {
+                    const headerY = totalHeight - params.header_height / 2 + params.header_footer_font_size / 3;
+                    svgContent += createSVGText(params.header_text, params.board_width / 2, headerY, params.header_footer_font_size, params.font_family_header);
+                }
+
             } else if (layerType === 'slider') {
                 const sliderHeight = slider_piece_height;
                 for (let i = 0; i < params.num_slider_sections; i++) {
                     const yOffset = i * (sliderHeight + 5);
                     const sliderPoints = createPillPoints(slider_length, sliderHeight, 0, yOffset + slider_radius);
                     svgContent += `<path d="${createSVGPath(sliderPoints)}" fill="none" stroke="black" stroke-width="0.1"/>`;
+
+                    // Add hidden text that shows when slider is moved right
+                    if (params.slider_hidden_text[i]) {
+                        const textX = slider_length * (params.hidden_text_offset / 100);
+                        const textY = yOffset + slider_radius + params.slider_font_size / 3;
+                        svgContent += createSVGText(params.slider_hidden_text[i], textX, textY, params.slider_font_size, params.font_family_slider_hidden, 'middle');
+                    }
                 }
-                
+
             } else if (layerType === 'knob') {
                 const knob_radius = knob_diameter / 2;
                 for (let i = 0; i < params.num_slider_sections; i++) {
@@ -680,6 +1275,16 @@
             svgContent += `\n  <!-- Layer 1 -->`;
             svgContent += `\n  <g id="layer1" transform="translate(0, 0)">`;
             svgContent += `\n    <rect x="0" y="0" width="${params.board_width}" height="${totalHeight}" fill="none" stroke="black" stroke-width="0.1"/>`;
+
+            // Add background text in slider track areas
+            for (let i = 0; i < params.num_slider_sections; i++) {
+                if (params.slider_background_text[i]) {
+                    const textX = params.board_width / 2 + params.background_text_x_offset;
+                    const textY = params.footer_height + (i * params.slider_height) + (params.slider_height / 2) + params.slider_font_size / 3;
+                    svgContent += `\n    ` + createSVGText(params.slider_background_text[i], textX, textY, params.slider_font_size, params.font_family_background, 'middle');
+                }
+            }
+
             svgContent += `\n  </g>`;
             
             // Layer 2
@@ -687,7 +1292,7 @@
             svgContent += `\n\n  <!-- Layer 2 -->`;
             svgContent += `\n  <g id="layer2" transform="translate(0, ${layer2Y})">`;
             svgContent += `\n    <rect x="0" y="0" width="${params.board_width}" height="${totalHeight}" fill="none" stroke="black" stroke-width="0.1"/>`;
-            
+
             // Pill slots
             for (let i = 0; i < params.num_slider_sections; i++) {
                 const slot_y_offset = params.footer_height + (i * params.slider_height) + (params.slider_height - params.slot_height) / 2;
@@ -702,7 +1307,7 @@
             svgContent += `\n\n  <!-- Layer 3 -->`;
             svgContent += `\n  <g id="layer3" transform="translate(0, ${layer3Y})">`;
             svgContent += `\n    <rect x="0" y="0" width="${params.board_width}" height="${totalHeight}" fill="none" stroke="black" stroke-width="0.1"/>`;
-            
+
             // Knob cutouts
             for (let i = 0; i < params.num_slider_sections; i++) {
                 const knob_x_offset = params.board_width - params.slot_margin - params.knob_cutout_margin - knob_cutout_width;
@@ -711,6 +1316,28 @@
                 const cutoutPoints = createPillPoints(knob_cutout_width, knob_cutout_height, knob_x_offset, knob_y_offset + knob_cutout_radius);
                 svgContent += `\n    <path d="${createSVGPath(cutoutPoints)}" fill="none" stroke="black" stroke-width="0.1"/>`;
             }
+
+            // Add slider section labels
+            for (let i = 0; i < params.num_slider_sections; i++) {
+                if (params.slider_labels[i]) {
+                    const labelX = params.slot_margin / 2 + params.label_text_x_offset;
+                    const labelY = params.footer_height + (i * params.slider_height) + (params.slider_height / 2) + params.slider_font_size / 3;
+                    svgContent += `\n    ` + createSVGText(params.slider_labels[i], labelX, labelY, params.slider_font_size, params.font_family_slider_labels, 'start');
+                }
+            }
+
+            // Add footer text (at bottom)
+            if (params.footer_text) {
+                const footerY = params.footer_height / 2 + params.footer_font_size / 3;
+                svgContent += `\n    ` + createSVGText(params.footer_text, params.board_width / 2, footerY, params.footer_font_size, params.font_family_footer);
+            }
+
+            // Add header text (at top)
+            if (params.header_text) {
+                const headerY = totalHeight - params.header_height / 2 + params.header_footer_font_size / 3;
+                svgContent += `\n    ` + createSVGText(params.header_text, params.board_width / 2, headerY, params.header_footer_font_size, params.font_family_header);
+            }
+
             svgContent += `\n  </g>`;
             
             // Sliders
@@ -720,6 +1347,13 @@
                 const yOffset = i * (slider_piece_height + 5);
                 const sliderPoints = createPillPoints(slider_length, slider_piece_height, 0, yOffset + slider_radius);
                 svgContent += `\n    <path d="${createSVGPath(sliderPoints)}" fill="none" stroke="black" stroke-width="0.1"/>`;
+
+                // Add hidden text
+                if (params.slider_hidden_text[i]) {
+                    const textX = slider_length * (params.hidden_text_offset / 100);
+                    const textY = yOffset + slider_radius + params.slider_font_size / 3;
+                    svgContent += `\n    ` + createSVGText(params.slider_hidden_text[i], textX, textY, params.slider_font_size, params.font_family_slider_hidden, 'middle');
+                }
             }
             svgContent += `\n  </g>`;
             
@@ -748,28 +1382,243 @@
         const controlNames = [
             'material_thickness', 'board_width', 'num_slider_sections',
             'header_height', 'slider_height', 'footer_height',
-            'slot_margin', 'slot_height'
+            'slot_margin', 'slot_height', 'header_footer_font_size', 'footer_font_size', 'slider_font_size', 'hidden_text_offset',
+            'label_text_x_offset', 'background_text_x_offset'
         ];
 
         controlNames.forEach(name => {
             const rangeInput = document.getElementById(name);
             const numberInput = document.getElementById(name + '_num');
-            
+
             rangeInput.addEventListener('input', (e) => {
                 numberInput.value = e.target.value;
                 params[name] = parseFloat(e.target.value);
+                if (name === 'num_slider_sections') {
+                    updateSliderPositionControls();
+                }
                 updateModel();
             });
-            
+
             numberInput.addEventListener('input', (e) => {
                 rangeInput.value = e.target.value;
                 params[name] = parseFloat(e.target.value);
+                if (name === 'num_slider_sections') {
+                    updateSliderPositionControls();
+                }
                 updateModel();
             });
         });
 
+        // Text input listeners
+        document.getElementById('header_text').addEventListener('input', (e) => {
+            params.header_text = e.target.value;
+            updateModel();
+        });
+
+        document.getElementById('footer_text').addEventListener('input', (e) => {
+            params.footer_text = e.target.value;
+            updateModel();
+        });
+
+        document.getElementById('slider_labels').addEventListener('input', (e) => {
+            params.slider_labels = e.target.value.split('\n').filter(line => line.trim() !== '');
+            updateModel();
+        });
+
+        document.getElementById('slider_hidden_text').addEventListener('input', (e) => {
+            params.slider_hidden_text = e.target.value.split('\n').filter(line => line.trim() !== '');
+            updateModel();
+        });
+
+        document.getElementById('slider_background_text').addEventListener('input', (e) => {
+            params.slider_background_text = e.target.value.split('\n').filter(line => line.trim() !== '');
+            updateModel();
+        });
+
+        // Font family listeners
+        document.getElementById('font_family_header').addEventListener('change', (e) => {
+            params.font_family_header = e.target.value;
+            updateModel();
+        });
+
+        document.getElementById('font_family_footer').addEventListener('change', (e) => {
+            params.font_family_footer = e.target.value;
+            updateModel();
+        });
+
+        document.getElementById('font_family_slider_labels').addEventListener('change', (e) => {
+            params.font_family_slider_labels = e.target.value;
+            updateModel();
+        });
+
+        document.getElementById('font_family_slider_hidden').addEventListener('change', (e) => {
+            params.font_family_slider_hidden = e.target.value;
+            updateModel();
+        });
+
+        document.getElementById('font_family_background').addEventListener('change', (e) => {
+            params.font_family_background = e.target.value;
+            updateModel();
+        });
+
+        // Layer visibility checkbox listeners
+        document.getElementById('show_layer1').addEventListener('change', updateLayerVisibility);
+        document.getElementById('show_layer2').addEventListener('change', updateLayerVisibility);
+        document.getElementById('show_layer3').addEventListener('change', updateLayerVisibility);
+
+        // Settings Management Functions
+
+        // Save current configuration to JSON file
+        function saveConfiguration() {
+            const config = {
+                version: '1.0',
+                timestamp: new Date().toISOString(),
+                params: params
+            };
+
+            const jsonString = JSON.stringify(config, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+
+            const dateStr = new Date().toISOString().split('T')[0];
+            link.download = `reminder_board_config_${dateStr}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Load configuration from file
+        function loadConfiguration() {
+            document.getElementById('configFileInput').click();
+        }
+
+        // Handle file load
+        function handleConfigFileLoad(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const config = JSON.parse(e.target.result);
+
+                    // Validate config
+                    if (!config.params) {
+                        alert('Invalid configuration file format.');
+                        return;
+                    }
+
+                    // Update params
+                    Object.assign(params, config.params);
+
+                    // Update UI controls
+                    updateUIFromParams();
+
+                    // Update slider position controls
+                    updateSliderPositionControls();
+
+                    // Update 3D model
+                    updateModel();
+
+                    alert('Configuration loaded successfully!');
+                } catch (error) {
+                    alert('Error loading configuration file: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+
+            // Reset file input
+            event.target.value = '';
+        }
+
+        // Set current configuration as user default
+        function setAsDefault() {
+            try {
+                localStorage.setItem('reminderBoardDefaults', JSON.stringify(params));
+                alert('Current settings saved as your default! These will be loaded next time you open the designer.');
+            } catch (error) {
+                alert('Error saving defaults: ' + error.message);
+            }
+        }
+
+        // Reset to factory defaults
+        function resetToDefaults() {
+            if (confirm('Are you sure you want to reset all settings to factory defaults? This will not affect your saved default settings.')) {
+                // Reset params to factory defaults
+                Object.assign(params, FACTORY_DEFAULTS);
+
+                // Update UI controls
+                updateUIFromParams();
+
+                // Update slider position controls
+                updateSliderPositionControls();
+
+                // Update 3D model
+                updateModel();
+            }
+        }
+
+        // Update all UI controls from params object
+        function updateUIFromParams() {
+            // Update range and number inputs
+            const controlNames = [
+                'material_thickness', 'board_width', 'num_slider_sections',
+                'header_height', 'slider_height', 'footer_height',
+                'slot_margin', 'slot_height', 'header_footer_font_size', 'footer_font_size',
+                'slider_font_size', 'hidden_text_offset', 'label_text_x_offset', 'background_text_x_offset'
+            ];
+
+            controlNames.forEach(name => {
+                const rangeInput = document.getElementById(name);
+                const numberInput = document.getElementById(name + '_num');
+                if (rangeInput && numberInput && params[name] !== undefined) {
+                    rangeInput.value = params[name];
+                    numberInput.value = params[name];
+                }
+            });
+
+            // Update text inputs
+            if (document.getElementById('header_text')) {
+                document.getElementById('header_text').value = params.header_text || '';
+            }
+            if (document.getElementById('footer_text')) {
+                document.getElementById('footer_text').value = params.footer_text || '';
+            }
+
+            // Update textareas
+            if (document.getElementById('slider_labels')) {
+                document.getElementById('slider_labels').value = (params.slider_labels || []).join('\n');
+            }
+            if (document.getElementById('slider_hidden_text')) {
+                document.getElementById('slider_hidden_text').value = (params.slider_hidden_text || []).join('\n');
+            }
+            if (document.getElementById('slider_background_text')) {
+                document.getElementById('slider_background_text').value = (params.slider_background_text || []).join('\n');
+            }
+
+            // Update font families
+            if (document.getElementById('font_family_header')) {
+                document.getElementById('font_family_header').value = params.font_family_header || 'Arial';
+            }
+            if (document.getElementById('font_family_footer')) {
+                document.getElementById('font_family_footer').value = params.font_family_footer || 'Arial';
+            }
+            if (document.getElementById('font_family_slider_labels')) {
+                document.getElementById('font_family_slider_labels').value = params.font_family_slider_labels || 'Arial';
+            }
+            if (document.getElementById('font_family_slider_hidden')) {
+                document.getElementById('font_family_slider_hidden').value = params.font_family_slider_hidden || 'Arial';
+            }
+            if (document.getElementById('font_family_background')) {
+                document.getElementById('font_family_background').value = params.font_family_background || 'Arial';
+            }
+        }
+
         // Initialize
         initThreeJS();
+        updateSliderPositionControls();
+        updateUIFromParams(); // Initialize UI from loaded defaults
         updateModel();
     </script>
 </body>
